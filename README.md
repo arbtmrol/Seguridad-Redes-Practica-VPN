@@ -2,55 +2,176 @@
 
 ## Datos del estudiante
 
-**Nombre:** Albert Morel  
-**Matrícula:** 2025-0833  
-**Asignatura:** Seguridad de Redes  
+**Nombre:** Albert Morel
+**Matrícula:** 2025-0833
+**Asignatura:** Seguridad de Redes
+
+---
 
 ## Propósito del laboratorio
 
-El propósito de este laboratorio es implementar y comprobar una comunicación segura entre una red de usuarios y un servidor web utilizando un enlace VPN Site-to-Site entre dos dispositivos FortiGate.
+El propósito de este laboratorio es implementar y comprobar la comunicación entre dos redes utilizando una VPN Site-to-Site mediante dos dispositivos FortiGate.
 
-La práctica permite comprobar que el usuario puede comunicarse con el servidor web cuando el túnel VPN se encuentra activo y que la comunicación deja de funcionar cuando el enlace VPN se encuentra deshabilitado.
+La práctica permite demostrar la comunicación entre un equipo ubicado en la red de FGT-1 y un servidor ubicado en la red remota protegida por FGT-2, utilizando el túnel VPN configurado entre ambos dispositivos.
+
+---
 
 ## Objetivos
 
-- Configurar dos dispositivos FortiGate mediante la interfaz gráfica.
-- Configurar las interfaces de red.
-- Configurar las direcciones IP correspondientes.
-- Configurar NAT.
-- Configurar una VPN Site-to-Site entre los dos FortiGate.
-- Configurar una red de usuarios mediante VLAN 10.
-- Configurar DHCP para los usuarios.
-- Configurar un servidor web mediante HTTPS.
-- Comprobar la comunicación entre el usuario y el servidor.
-- Comprobar que la comunicación depende del enlace VPN.
-- Realizar un traceroute desde el usuario hacia el servidor.
+* Configurar dos dispositivos FortiGate mediante su interfaz gráfica.
+* Configurar las interfaces de red utilizadas en la topología.
+* Configurar el direccionamiento IP correspondiente.
+* Configurar las rutas necesarias para la comunicación entre las redes.
+* Configurar una VPN Site-to-Site entre FGT-1 y FGT-2.
+* Configurar las políticas necesarias para permitir la comunicación.
+* Comprobar la conectividad entre el equipo de usuario y el servidor remoto.
+* Realizar una prueba de `ping` entre las redes.
+* Realizar un `traceroute` desde el usuario hacia el servidor.
+* Verificar el estado activo del túnel VPN.
+
+---
 
 ## Topología
 
 La infraestructura está compuesta por:
 
-- 2 FortiGate.
-- 1 router ISP.
-- 2 switches.
-- 1 usuario.
-- 1 servidor web.
-- 1 conexión hacia Cloud/Internet.
-- 1 túnel VPN Site-to-Site entre los FortiGate.
+* 2 dispositivos FortiGate.
+* 1 router.
+* 2 switches.
+* 1 equipo PC1.
+* 1 Web Server (`webterm-1`).
+* 1 conexión Cloud.
+* 1 túnel VPN Site-to-Site entre los FortiGate.
 
-## Demostración
+La topología utilizada se encuentra en:
 
-En el video demostrativo se mostrará:
+**[Topologia.png](./Topologia.png)**
 
-1. La fecha y hora.
-2. La topología implementada.
-3. El estado del túnel VPN.
-4. La comunicación del usuario con el servidor web mediante HTTPS.
-5. El funcionamiento del traceroute.
-6. La desactivación del enlace VPN.
-7. La comprobación de que la comunicación deja de funcionar.
-8. La activación nuevamente del enlace VPN y la recuperación de la comunicación.
+---
+
+## Direccionamiento utilizado
+
+### PC1
+
+```text
+IP:       192.168.10.2/25
+Gateway:  192.168.10.1
+```
+
+### Web Server
+
+```text
+IP:       172.16.83.2/28
+Gateway:  172.16.83.1
+```
+
+### FGT-1
+
+```text
+Port1: 200.83.33.2/30
+Port2: 192.168.33.1/25
+Port3: 192.168.161.101/24
+```
+
+### FGT-2
+
+```text
+Port1: 200.83.34.2/30
+Port2: 172.16.83.1/28
+Port3: 192.168.161.102/24
+```
+
+---
+
+## VPN Site-to-Site
+
+El túnel configurado en FGT-1 se identifica como:
+
+```text
+VPN_to_FGT2
+```
+
+El gateway remoto configurado corresponde a:
+
+```text
+200.83.34.2
+```
+
+Durante las pruebas, el túnel aparece activo mediante el indicador de estado de FortiGate.
+
+---
+
+## Pruebas realizadas
+
+### Prueba de conectividad
+
+Desde PC1 se realizó una prueba de conectividad hacia el Web Server:
+
+```text
+ping 172.16.83.2
+```
+
+Resultado:
+
+```text
+5 paquetes enviados
+5 paquetes recibidos
+0% de pérdida
+```
+
+### Traceroute
+
+Desde PC1 se realizó:
+
+```text
+trace 172.16.83.2
+```
+
+El recorrido observado fue:
+
+```text
+192.168.10.1
+200.83.34.2
+172.16.83.2
+```
+
+Estas pruebas permiten comprobar la comunicación entre la red de PC1 y la red remota donde se encuentra el Web Server.
+
+---
 
 ## Evidencias
 
-Las imágenes, configuraciones y evidencias de las pruebas realizadas se encuentran organizadas dentro de las carpetas correspondientes de este repositorio.
+Las evidencias de la práctica se encuentran organizadas dentro de las carpetas correspondientes del repositorio.
+
+Entre ellas se incluyen:
+
+* Imagen de la topología.
+* Estado del túnel VPN.
+* Prueba de conectividad mediante `ping`.
+* Prueba de recorrido mediante `traceroute`.
+* Configuraciones de los dispositivos FortiGate.
+
+---
+
+## Video demostrativo
+
+**Video:** Pendiente de publicación.
+
+El video demostrativo presentará:
+
+1. Identificación del estudiante.
+2. Fecha y hora.
+3. Topología implementada.
+4. Estado del túnel VPN.
+5. Prueba de conectividad entre PC1 y el Web Server.
+6. Prueba de `traceroute`.
+7. Conclusión sobre el funcionamiento de la comunicación entre las redes.
+
+---
+
+## Conclusión
+
+La práctica permitió implementar una VPN Site-to-Site entre dos dispositivos FortiGate y comprobar la comunicación entre una red de usuarios y una red remota.
+
+Las pruebas realizadas mediante `ping` y `traceroute` demostraron que PC1 puede alcanzar el Web Server ubicado en la red remota mientras el túnel VPN se encuentra activo.
+
